@@ -152,7 +152,7 @@
   (function () {
     var cv = document.getElementById("net"), ctx = cv.getContext("2d");
     var W, H, nodes = [];
-    var N = 46, LINK = 190;
+    var N = 70, LINK = 210;
     function resize() {
       W = cv.width = window.innerWidth; H = cv.height = window.innerHeight;
     }
@@ -178,7 +178,7 @@
           var b = nodes[j], dx = a.x - b.x, dy = a.y - b.y;
           var d = Math.sqrt(dx * dx + dy * dy);
           if (d < LINK) {
-            var alpha = (1 - d / LINK) * 0.24;
+            var alpha = (1 - d / LINK) * 0.32;
             ctx.strokeStyle = "rgba(212,175,55," + alpha.toFixed(3) + ")";
             ctx.lineWidth = 1;
             ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
@@ -187,7 +187,7 @@
       }
       for (var k = 0; k < N; k++) {
         var n = nodes[k];
-        var glow = 0.5 + 0.3 * Math.sin(n.pulse);
+        var glow = 0.6 + 0.3 * Math.sin(n.pulse);
         ctx.fillStyle = "rgba(212,175,55," + glow.toFixed(3) + ")";
         ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
       }
