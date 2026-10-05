@@ -166,6 +166,7 @@
       };
     }
     for (var i = 0; i < N; i++) nodes.push(spawn());
+    var animated = true;
     function frame() {
       ctx.clearRect(0, 0, W, H);
       for (var i = 0; i < N; i++) {
@@ -177,7 +178,7 @@
           var b = nodes[j], dx = a.x - b.x, dy = a.y - b.y;
           var d = Math.sqrt(dx * dx + dy * dy);
           if (d < LINK) {
-            var alpha = (1 - d / LINK) * 0.16;
+            var alpha = (1 - d / LINK) * 0.24;
             ctx.strokeStyle = "rgba(212,175,55," + alpha.toFixed(3) + ")";
             ctx.lineWidth = 1;
             ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
@@ -186,13 +187,13 @@
       }
       for (var k = 0; k < N; k++) {
         var n = nodes[k];
-        var glow = 0.35 + 0.25 * Math.sin(n.pulse);
+        var glow = 0.5 + 0.3 * Math.sin(n.pulse);
         ctx.fillStyle = "rgba(212,175,55," + glow.toFixed(3) + ")";
         ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
       }
-      requestAnimationFrame(frame);
+      if (animated) requestAnimationFrame(frame);
     }
-    frame();
+    frame(); // paint first frame immediately so it shows even if rAF throttles
   })();
 </script>
 </body>
