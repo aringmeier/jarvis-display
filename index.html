@@ -151,37 +151,53 @@
   }
   tick(); setInterval(tick, 15000);
 
-  // gold neural network backdrop
+  // gold neural network backdrop — radial gradient, dense core fading to edges
   (function () {
     var cv = document.getElementById("net"), ctx = cv.getContext("2d");
-    var W, H, nodes = [];
-    var N = 70, LINK = 210;
+    var W, H, CX, CY, maxR, nodes = [];
+    var N = 110, LINK = 200;
     function resize() {
       W = cv.width = window.innerWidth; H = cv.height = window.innerHeight;
+      CX = W / 2; CY = H / 2; maxR = Math.sqrt(CX * CX + CY * CY);
     }
     window.addEventListener("resize", resize); resize();
     function spawn() {
+      var ang = Math.random() * Math.PI * 2;
+      var rr = (Math.random() + Math.random() + Math.random()) / 3; // center-weighted 0..1
+      var rad = rr * maxR;
       return {
-        x: Math.random() * W, y: Math.random() * H,
+        x: CX + Math.cos(ang) * rad, y: CY + Math.sin(ang) * rad,
         vx: (Math.random() - 0.5) * 0.22, vy: (Math.random() - 0.5) * 0.22,
         r: 1.4 + Math.random() * 2.2,
-        pulse: Math.random() * Math.PI * 2
+        pulse: Math.random() * Math.PI * 2,
+        f: 1
       };
     }
     for (var i = 0; i < N; i++) nodes.push(spawn());
     var animated = true;
+    function falloff(x, y) {
+      var dx = x - CX, dy = y - CY;
+      var t = Math.sqrt(dx * dx + dy * dy) / maxR;
+      if (t > 1) t = 1;
+      return 1 - t * 0.6; // 1.0 at center, 0.4 at corners
+    }
     function frame() {
       ctx.clearRect(0, 0, W, H);
       for (var i = 0; i < N; i++) {
         var a = nodes[i];
         a.x += a.vx; a.y += a.vy; a.pulse += 0.015;
+        a.vx += (CX - a.x) * 0.000004; // gentle pull keeps the radial gradient
+        a.vy += (CY - a.y) * 0.000004;
+        var sp = Math.sqrt(a.vx * a.vx + a.vy * a.vy);
+        if (sp > 0.35) { a.vx *= 0.35 / sp; a.vy *= 0.35 / sp; }
         if (a.x < -20) a.x = W + 20; if (a.x > W + 20) a.x = -20;
         if (a.y < -20) a.y = H + 20; if (a.y > H + 20) a.y = -20;
+        a.f = falloff(a.x, a.y);
         for (var j = i + 1; j < N; j++) {
           var b = nodes[j], dx = a.x - b.x, dy = a.y - b.y;
           var d = Math.sqrt(dx * dx + dy * dy);
           if (d < LINK) {
-            var alpha = (1 - d / LINK) * 0.32;
+            var alpha = (1 - d / LINK) * 0.34 * (a.f + b.f) / 2;
             ctx.strokeStyle = "rgba(212,175,55," + alpha.toFixed(3) + ")";
             ctx.lineWidth = 1;
             ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
@@ -190,7 +206,7 @@
       }
       for (var k = 0; k < N; k++) {
         var n = nodes[k];
-        var glow = 0.6 + 0.3 * Math.sin(n.pulse);
+        var glow = (0.6 + 0.3 * Math.sin(n.pulse)) * n.f;
         ctx.fillStyle = "rgba(212,175,55," + glow.toFixed(3) + ")";
         ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
       }
