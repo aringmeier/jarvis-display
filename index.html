@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="refresh" content="900">
+<title>Jarvis</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #06090f;
+    color: #d7e3f4;
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+    padding: 4vmin;
+    min-height: 100vh;
+  }
+  .header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3vmin; }
+  .clock { font-size: 9vmin; font-weight: 200; letter-spacing: 0.02em; }
+  .date { font-size: 3.4vmin; color: #7fd4ff; font-weight: 300; }
+  .updated { font-size: 2vmin; color: #4a5a70; margin-top: 0.5vmin; }
+  .grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 3vmin; }
+  .card {
+    background: #0c1220;
+    border: 1px solid #1b2942;
+    border-radius: 2vmin;
+    padding: 3vmin;
+  }
+  .card h2 {
+    font-size: 2.6vmin; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.25em; color: #7fd4ff; margin-bottom: 2vmin;
+  }
+  .todo li {
+    list-style: none; font-size: 2.9vmin; line-height: 1.5;
+    padding: 1.2vmin 0; border-bottom: 1px solid #16203a;
+  }
+  .todo li:last-child { border-bottom: none; }
+  .todo .tag {
+    display: inline-block; font-size: 2vmin; color: #0c1220; background: #7fd4ff;
+    border-radius: 1vmin; padding: 0.3vmin 1.2vmin; margin-right: 1.5vmin;
+    font-weight: 700; vertical-align: middle;
+  }
+  .weather-now { font-size: 6vmin; font-weight: 200; }
+  .weather-now small { font-size: 3vmin; color: #8fa3bf; }
+  .weather-detail { font-size: 2.7vmin; color: #8fa3bf; margin-top: 1.5vmin; line-height: 1.7; }
+  .news li { list-style: none; font-size: 2.7vmin; line-height: 1.45; padding: 1.4vmin 0; border-bottom: 1px solid #16203a; }
+  .news li:last-child { border-bottom: none; }
+  .news .dot { color: #7fd4ff; margin-right: 1.2vmin; }
+  .full { grid-column: 1 / -1; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <div class="clock" id="clock">--:--</div>
+      <div class="date">Sunday, October 4, 2026</div>
+    </div>
+    <div style="text-align:right">
+      <div class="date">Seattle, WA</div>
+      <div class="updated">dashboard updated 6:53 PM</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>To-Do</h2>
+      <ul class="todo">
+        <li><span class="tag">IG</span>Approve maul.c63 Black Series reel draft</li>
+        <li><span class="tag">IG</span>Retry moneymechanicsdaily latte-factor post (publish timed out)</li>
+        <li><span class="tag">IG</span>Tap to publish @ale.john.dro midday maple-leaf draft</li>
+        <li><span class="tag">IG</span>mavlabs evening draft + engagement targets tonight</li>
+        <li><span class="tag">ETSY</span>Review holiday fix pack, sign in to apply</li>
+        <li><span class="tag">CAR</span>C-Max listing: add December availability note</li>
+        <li><span class="tag">CAR</span>C63 sale kit: maintenance history incoming</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Weather</h2>
+      <div class="weather-now">65&deg; <small>clear</small></div>
+      <div class="weather-detail">
+        Humidity 69% &middot; AQI 53 (moderate)<br>
+        Tonight: clear, low ~57&deg;<br>
+        Monday: 67&deg; / 54&deg;, AM clouds PM sun, 20% rain<br>
+        Sunrise 7:12 AM &middot; Sunset 6:42 PM
+      </div>
+    </div>
+
+    <div class="card full">
+      <h2>Headlines</h2>
+      <ul class="news">
+        <li><span class="dot">&#9679;</span>White House launches 120-day AI task force on risks and opportunities</li>
+        <li><span class="dot">&#9679;</span>Investigators probe FlyDubai co-pilot after deleted 2022 social post</li>
+        <li><span class="dot">&#9679;</span>Byron Donalds poised to become MAGA power broker in Florida governor race</li>
+        <li><span class="dot">&#9679;</span>Magnitude 4.9 earthquake strikes Afghanistan</li>
+        <li><span class="dot">&#9679;</span>India beats Pakistan for Asian Games cricket gold, finishes with 85 medals</li>
+      </ul>
+    </div>
+  </div>
+
+<script>
+  function tick() {
+    var d = new Date();
+    var h = d.getHours(), m = d.getMinutes();
+    var ap = h >= 12 ? "PM" : "AM";
+    h = h % 12; if (h === 0) h = 12;
+    document.getElementById("clock").textContent =
+      h + ":" + (m < 10 ? "0" : "") + m + " " + ap;
+  }
+  tick(); setInterval(tick, 15000);
+</script>
+</body>
+</html>
